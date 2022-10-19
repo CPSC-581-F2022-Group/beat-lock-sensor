@@ -168,7 +168,7 @@
         <script>
             var passcode = 0; //tracking the number of buttons pressed for the passcode
             var incorrectPasscodes = 0; //tracking the number of incorrect passcode attempts
-            var checkTimings = [];
+            //var checkTimings = [];
             lockScreenState = {
                 "deviceType": "", // Set to IPhone or other
                 "timings":["four", "two", "three", "four", "four", "one", "five"] // The "lock pattern"
@@ -216,6 +216,7 @@
             var startTime = 0;
             var endTime = 0;
             
+            //Change this to be the only for the beats using the sensor function
             //Checks the value of the button pressed
             function buttonPress(buttonID){
                 console.log(`button ${buttonID} pressed`);
@@ -225,35 +226,39 @@
                 audio.play();
                 passcode += 1;
                 
+                
+                //Use this timer for the sensor, can start checking after the first beat is hit
                 //Creates a timer to ensure that the beat is within the time constraint
                 if (startTime == 0){
                     startTime = Date.now();
                 }
                 checkTimings.push(buttonID);
 
+                //Check when 7 beats are complete, should be within the range of 3.5 - 4.5 seconds
                 //Checks when there has been an input of 7 numbers (drum beats)
                 if (passcode >= 7){
                     endTime = Math.floor(Date.now() - startTime);
                     console.log(endTime);
-                    var enteredPasscode = JSON.stringify(checkTimings);
-                    var actualPasscode = JSON.stringify(lockScreenState["timings"]);
-                    console.log("Matching passcode: " + (enteredPasscode == actualPasscode));
+                    //var enteredPasscode = JSON.stringify(checkTimings);
+                    //var actualPasscode = JSON.stringify(lockScreenState["timings"]);
+                    //console.log("Matching passcode: " + (enteredPasscode == actualPasscode));
                     console.log("Correct beat time: " + (endTime >= 3500 && endTime <= 4500));
 
                     //Checks if the beat and passcode is correct, if yes it goes to the homescreen, if no it shows incorrect input messages
-                    if ((endTime >= 3500 && endTime <= 4500) && (enteredPasscode == actualPasscode)){
+                    if (endTime >= 3500 && endTime <= 4500){ //&& (enteredPasscode == actualPasscode)){
                         showHomeScreen();
                     }else{
                         startTime = 0;
-                        checkTimings = [];
+                        //checkTimings = [];
                         passcode = 0; 
                         incorrectPasscodes += 1;
                         console.log("incorrect passcodes entered: " + incorrectPasscodes);
-                        showWrongPasscode(endTime, enteredPasscode, actualPasscode);
+                        //showWrongPasscode(endTime, enteredPasscode, actualPasscode);
                     }
                 }
             }
 
+            //Remove buttons
             //Shows the buttons after clicking the initial start button, or any of the incorrect passcode/beat message buttons
             function showButtons(){
                 document.getElementById('locked').style.display = "none";
@@ -266,6 +271,7 @@
                 document.getElementById('lockedOut').style.display = "none";
             }
 
+            //Update this to only include the time for when there is wrong beat (do not include wrong passcode or wrong passcode & beat)
             //Shows the different wrong input messages depending on the incorrect beat, passcode, or both
             function showWrongPasscode(endTime, enteredPasscode, actualPasscode){
                 document.getElementById('background').style.zIndex = 0;
