@@ -261,45 +261,7 @@
                 }
             }    
         
-            function buttonPress(buttonID){
-                console.log(`button ${buttonID} pressed`);
-                var audio = document.getElementById("sound");
-                audio.playbackRate = 10;
-                audio.load();
-                audio.play();
-                passcode += 1;
-                
-                
-                //Use this timer for the sensor, can start checking after the first beat is hit
-                //Creates a timer to ensure that the beat is within the time constraint
-                if (startTime == 0){
-                    startTime = Date.now();
-                }
-                checkTimings.push(buttonID);
-
-                //Check when 7 beats are complete, should be within the range of 3.5 - 4.5 seconds
-                //Checks when there has been an input of 7 numbers (drum beats)
-                if (passcode >= 7){
-                    endTime = Math.floor(Date.now() - startTime);
-                    console.log(endTime);
-                    //var enteredPasscode = JSON.stringify(checkTimings);
-                    //var actualPasscode = JSON.stringify(lockScreenState["timings"]);
-                    //console.log("Matching passcode: " + (enteredPasscode == actualPasscode));
-                    console.log("Correct beat time: " + (endTime >= 3500 && endTime <= 4500));
-
-                    //Checks if the beat and passcode is correct, if yes it goes to the homescreen, if no it shows incorrect input messages
-                    if (endTime >= 3500 && endTime <= 4500){ //&& (enteredPasscode == actualPasscode)){
-                        showHomeScreen();
-                    }else{
-                        startTime = 0;
-                        //checkTimings = [];
-                        passcode = 0; 
-                        incorrectPasscodes += 1;
-                        console.log("incorrect passcodes entered: " + incorrectPasscodes);
-                        //showWrongPasscode(endTime, enteredPasscode, actualPasscode);
-                    }
-                }
-            }
+        
 
 
             window.addEventListener('deviceorientation', function(event) {
