@@ -150,16 +150,12 @@
             <button id="wrongBeat" onclick="showButtons()">Incorrect Beat <br> (Try Again)</button>
             <button id="wrongBeatPasscode" onclick="showButtons()">Incorrect Beat & Passcode <br> (Try Again)</button>
             <button id="lockedOut">Too Many Incorrect Attempts (please wait 30 seconds)</button>
+
+            <audio id="sound" src="https://bigsoundbank.com/UPLOAD/mp3/2308.mp3"></audio>
+
         </div>
 
-        <div class="buttonDrums" id="buttonDrums">
-            <button id="one" onclick="buttonPress(this.id)">1</button>
-            <button id="two" onclick="buttonPress(this.id)">2</button>
-            <button id="three" onclick="buttonPress(this.id)">3</button>
-            <button id="four" onclick="buttonPress(this.id)">4</button>
-            <button id="five" onclick="buttonPress(this.id)">5</button>
-            <audio id="sound" src="https://bigsoundbank.com/UPLOAD/mp3/2308.mp3"></audio>
-        </div>
+       
         
         <!-- <p>Sensor-X: <span id="sensor-x"></span></p>
         <p>Sensor-Y: <span id="sensor-y"></span></p>
@@ -215,9 +211,56 @@
 
             var startTime = 0;
             var endTime = 0;
-            
+            var beatCount = 0;
+            var startingPosition = 0;
             //Change this to be the only for the beats using the sensor function
             //Checks the value of the button pressed
+            
+            function handleOrientation(event) {
+            //setting first postion of the durm stick
+                if( event.beta  > 60 && event.beta < 110){
+                startingPosition = 1;
+                }
+            
+                //defining stiking position for drum stick
+                if( event.beta  > 10 && event.beta < 15){
+                    if(startingPosition == 1){
+                    beatCount++;
+                    startingPosition = 0;
+                    var audio = document.getElementById("sound");
+                    audio.playbackRate = 10;
+                    audio.load();
+                    audio.play();
+                    }
+                }
+
+                if (startTime == 0){
+                    startTime = Date.now();
+                }
+                checkTimings.push(buttonID);
+
+                if (beatCount >= 4){
+                    endTime = Math.floor(Date.now() - startTime);
+                    console.log(endTime);
+                    //var enteredPasscode = JSON.stringify(checkTimings);
+                    //var actualPasscode = JSON.stringify(lockScreenState["timings"]);
+                    //console.log("Matching passcode: " + (enteredPasscode == actualPasscode));
+                    console.log("Correct beat time: " + (endTime >= 3500 && endTime <= 4500));
+
+                    //Checks if the beat and passcode is correct, if yes it goes to the homescreen, if no it shows incorrect input messages
+                    if ((endTime >= 3500 && endTime <= 4500) && (beatCount == 4)){
+                        showHomeScreen();
+                    }else{
+                        startTime = 0;
+                        //checkTimings = [];
+                        passcode = 0; 
+                        incorrectPasscodes += 1;
+                        console.log("incorrect passcodes entered: " + incorrectPasscodes);
+                        showWrongPasscode(endTime, enteredPasscode, actualPasscode);
+                    }
+                }
+            }    
+        
             function buttonPress(buttonID){
                 console.log(`button ${buttonID} pressed`);
                 var audio = document.getElementById("sound");
@@ -257,6 +300,12 @@
                     }
                 }
             }
+
+
+            window.addEventListener('deviceorientation', function(event) {
+            //console.log(event.alpha + ' : ' + event.beta + ' : ' + event.gamma);
+            handleOrientation(event);
+            });
 
             //Remove buttons
             //Shows the buttons after clicking the initial start button, or any of the incorrect passcode/beat message buttons
@@ -318,10 +367,10 @@
                 }
             }
 
-            /*timings = [
+            timings = [
                 "1000",
                 "2200",
-            ]*/ // Can be used in drumstick one
+            ] // Can be used in drumstick one
         </script>
     </body>
 </html>
