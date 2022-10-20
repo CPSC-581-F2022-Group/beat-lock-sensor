@@ -63,27 +63,6 @@
                 padding-right: 30px;
             }
 
-            /* .drum {
-                position: relative;
-                width: 110px;
-                height: 110px;
-            } */
-
-            /* .drumstick {
-                position: absolute;
-                width: 100px;
-                height: 100px;
-                left: 70%;
-                bottom: 25%;
-                z-index: 9;
-            }
-
-            .drumstick:active {
-                transform-origin: top right;
-                transform: rotate(-5deg);
-            }
-            */
-
             #drum1, #drum2 {
                 height: 40%;
                 width: 40%;
@@ -211,7 +190,7 @@
             var startTime = 0;
             var endTime = 0;
             var beatCount = 0; // Tracks the number of beats (movements of the phone)
-            var incorrectBeat = 0; // Tracks number of beat attempts
+            var incorrectBeatss = 0; // Tracks number of beat attempts
             var startingPosition = 0; // Tracks the starting position of the phone
             var rotated = document.getElementById('stick');
 
@@ -255,8 +234,8 @@
                     }else{
                         startTime = 0;
                         beatCount = 0;
-                        incorrectBeat += 1;
-                        console.log("Incorrect beat attempts: " + incorrectBeat);
+                        incorrectBeats += 1;
+                        console.log("Incorrect beat attempts: " + incorrectBeats);
                         showWrongPasscode(endTime);
                     }
                 }
@@ -274,7 +253,6 @@
                 document.getElementById('locked').style.display = "none";
                 document.getElementById('background').style.background = "none";
                 document.getElementById('background').style.zIndex = -998;
-                //document.getElementById('background').remove();
                 document.getElementById('buttonDrums').style.display = "block";
                 document.getElementById('wrongBeatFast').style.display = "none";
                 document.getElementById('wrongBeatSlow').style.display = "none";
@@ -294,12 +272,12 @@
                 }
 
                 // Too many incorrect attempts at entering the beat
-                if (incorrectPasscodes == 5){
+                if (incorrectBeats == 5){
                     document.getElementById('wrongBeatFast').style.display = "none";
                     document.getElementById('wrongBeatSlow').style.display = "none";
                     document.getElementById('lockedOut').style.display = "block"; 
 
-                    incorrectPasscodes = 0;
+                    incorrectBeats = 0;
                     sleep(30000).then(() => {showDrumstick(); });
                 }
             }
