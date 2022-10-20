@@ -213,12 +213,18 @@
             var beatCount = 0; // Tracks the number of beats (movements of the phone)
             var incorrectBeat = 0; // Tracks number of beat attempts
             var startingPosition = 0; // Tracks the starting position of the phone
+            var rotated = document.getElementById('stick');
+
             
             // Checks the orientation of the phone
             function handleOrientation(event) {
                 //console.log(event.beta); // Check the orientation of the device
                 if(event.beta > 60 && event.beta < 110){ // Setting first postion of the drum stick
                     startingPosition = 1;
+                     if(beatCount != 0)
+                    {
+                       rotated.style.transform = 'rotate(180deg)';
+                    }
                 }
             
                 // Defining striking position for drum stick
@@ -226,6 +232,7 @@
                     if(startingPosition == 1){
                         beatCount++;
                         startingPosition = 0;
+                        rotated.style.transform = 'rotate(15deg)';
                         var audio = document.getElementById("sound");
                         audio.playbackRate = 10;
                         audio.load();
