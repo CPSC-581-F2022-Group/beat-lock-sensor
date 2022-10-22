@@ -75,11 +75,6 @@
                 transform: rotate(180deg);
             }
 
-            #stick:active {
-                transform-origin: bottom right;
-                transform: rotate(-20deg);
-            }
-
             #locked{
                 text-align: center;
                 top: 20%;
@@ -159,7 +154,6 @@
         <div class="buttonDrums" id="buttonDrums">
             <img src="img/drum.png" alt="drum" id="drum1">
             <img src="img/drumstick.png" alt="drumstick" id="stick">
-            <!-- <img src="img/drum_lr.png" alt="drum" id="drum2"> -->
         </div>
 
         <script>
@@ -199,7 +193,7 @@
                 //console.log(event.beta); // Check the orientation of the device
                 if(event.beta > 60 && event.beta < 110){ // Setting first postion of the drum stick
                     startingPosition = 1;
-                     if(beatCount != 0)
+                    if(beatCount != 0)
                     {
                        rotated.style.transform = 'rotate(180deg)';
                     }
@@ -222,7 +216,8 @@
                     }
                 }                
 
-                if (beatCount == 7){
+                if (beatCount == 2){
+                    beatCount = 0;
                     endTime = Math.floor(Date.now() - startTime);
                     console.log(endTime);
                     console.log("Correct beat time: " + (endTime >= 4000 && endTime <= 6000));
@@ -256,6 +251,7 @@
                 document.getElementById('wrongBeatFast').style.display = "none";
                 document.getElementById('wrongBeatSlow').style.display = "none";
                 document.getElementById('lockedOut').style.display = "none";
+                rotated.style.transform = 'rotate(180deg)'
             }
 
             // Shows the different wrong input messages depending on the incorrect beat, passcode, or both
